@@ -1,0 +1,33 @@
+const { Observable } = Rx;
+const { tap, share } = RxOperators;
+
+const observable = new Observable((subscriber) => {
+  subscriber.next(1);
+  subscriber.next(2);
+  subscriber.next(3);
+  
+  setTimeout(() => {
+    subscriber.next(4);
+  }, 1);
+  //subscriber.error(new Error('rsndom'));
+ // subscriber.complete();
+  
+  //subscriber.error(new Error('rsndom'));
+}
+).pipe(
+	tap(value => console.log('From tap:', value)),
+  share()
+);
+
+observable.subscribe(
+  (value) => console.log('Next value:', value),
+  (err) =>console.error('BAD thisng!',err.message),//optional
+  () => console.log('COMPLETE')//optional
+ );
+
+observable.subscribe((value) => {
+  console.log('From second sub value:', value);
+});
+
+//for running in this tool
+new observable(() => {});
